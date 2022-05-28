@@ -1,0 +1,35 @@
+{
+  "extends": "./config/tsc.decorators",
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "ES2021",
+    "lib": ["ES2021", "dom", "ESNext.AsyncIterable"],
+    "declarationDir": "./lib",
+    "jsx": "preserve",
+    "declaration": true,
+    "declarationMap": true
+    // "emitDeclarationOnly": true,
+    // "disableSolutionSearching": true,
+  },
+  "files": ["./src/index.ts"],
+  "references": [
+    {
+      "path": "./apps/xm/tsconfig.json"
+    },
+    {
+      "path": "./apps/web/tsconfig.json"
+    },
+    {
+      "paths": "./apps/frame/tsconfig.json"
+    }
+  ],
+  "include": ["./apps/**/*.tsx", "./apps/**/*.ts", "./apps/**/**.*.ts", "./apps/**/**.*.tsx"],
+  "exclude": ["node_modules"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "resolveJsonModule": true,
+      "noImplicitAny": false
+    }
+  }
+}

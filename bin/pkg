@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+
+# saves the project root directory
+ANCHOR_DIR="$(pwd)"
+ROOT_NAME="jot"
+PKG_DIR_NAME="apps"
+ping() {
+  echo "[cmd] Pinging packages."
+}
+ping_pkg() {
+  cd "$1"
+  echo " > pong: $(pwd)"
+  cd "$ANCHOR_DIR"
+}
+version() {
+  echo "[cmd] Reporting all packages versions."
+  echo "(root) $ROOT_NAME:" v$(head -n 3 ./package.json | grep '"version":' | cut -d '"' -f 4)
+}
+version_pkg() {
+  local pkg=$(echo "$1" | sed 's/${PKG_DIR_NAME}\/\(.*\)\//\(pkg\) \1/g')
+  echo "$pkg:" v$(head -n 3 "$1"/package.json | grep '"version":' | cut -d '"' -f 4)
+}
+
+clean() {
+  echo "[cmd] Removing build files from all packages."
+}
+clean_pkg() {
+  rm -rf "$1"/dist
+  rm -rf "$1"/lib
+}
+denode() {
+  echo "[cmd] Removing all node_modules/ directories."
+  rm -r node_modules/
+  rm package-lock.json
+}
+denode_pkg() {
+  if [[ -d "$1"/node_modules ]]; then
+    echo " > $1: Removing node_modules/ directory."
+    echo " > $1: [warn] node_modules/ directory should only exist in the project root."
+    rm -r "$1"/node_modules
+    rm "$1"/package-lock.json
+  else
+    echo " > $1: No node_modules/ directory."
+  fi
+}
+
+show_tsc() {
+  echo "[cmd] Running 'tsc --showConfig on each package."
+}
+show_tsc_pkg() {
+  local sed_string="s/.*${PKG_DIR_NAME}\/\(.*\)\//\1/g"
+  echo " > showing detected tsconfig in $(echo $(pwd)/"$1" | sed ${sed_string}):"
+  npx tsc --project "$1" --showConfig
+}
+# list of all package directories as `apps/<package_name>/`
+pkg_list=$(ls -d ${PKG_DIR_NAME}/*/)
+
+cmdString=""
+case "$1" in
+  ping|-p|--ping) cmdString="ping" ;;
+  clean|-c|--clean) cmdString="clean" ;;
+  version|-v|--version) cmdString="version" ;;
+  showtsc|-show|--showtsc) cmdString="show_tsc"
+    check_second_arg=$(echo "$pkg_list" | grep -c "$2")
+    if [[ $check_second_arg -gt 0 && $check_second_arg -lt 2 ]]; then
+      package=$(echo "$pkg_list" | grep "$2")
+      echo "[cmd] Running 'tsc --showConfig' in $package."
+      cmd="${cmdString}_pkg"
+      eval ${cmd} "$package"
+      exit 0
+    fi
+  ;;
+  denode|-d|--denode) cmdString="denode" ;;
+  *) exit;;
+esac
+
+echo "<${cmdString}> will be run on the following ${PKG_DIR_NAME}:" 
+echo "${pkg_list}"
+echo
+
+eval "$cmdString";
+for pkg in $pkg_list; do
+  # echo "dir: ./${pkg}"
+  if [[ -f "${pkg}/package.json" ]]; then
+    # Run command string
+    cmd="${cmdString}_pkg ${pkg}"
+    eval ${cmd}
+  else
+    echo " > $pkg: No package.json found. Proceeding."
+  fi
+done
+
+echo "pkg script finished!"

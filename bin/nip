@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+# Simple script used for making installing npm packages with the rather verbose 
+# --workspaces option easier.
+# Basically, it just inverts the order of arguments so that you pass the workspace first and then the install targets.
+
+ROOT_DIR='/ns/500/jot'
+ROOT_NAME='jot'
+SCOPE='@'"$ROOT_NAME"
+if [[ $(pwd) = "$ROOT_DIR" ]]; then
+  echo "[pass] pwd matches the given root directory: " "$ROOT_DIR"
+else
+  echo " > This script must be run at the root of the monorepo."
+  echo " > Do not run npm install inside package subdirectories."
+  exit 1;
+fi
+
+# Assign first arg to workspace
+PKG="$1"
+shift
+case "$PKG" in
+  ws|-ws|--workspaces)
+    echo " > Running following arguments as command in all workspaces."
+    npm "$@" --workspaces
+    exit 0
+    ;;
+  root|-r|--root)
+    echo " > Installing directly in root directory."
+    npm install "$@"
+    exit 0
+    ;;
+  xm|-xm|--xm)
+    echo " > Installing in xm/ directory."
+    npm install "$@" --workspace="${SCOPE}/xm"
+    exit 0
+    ;;
+  web|-w|--web)
+    echo " > Installing in web/ directory."
+    npm install "$@" --workspace="${SCOPE}/web"
+    exit 0
+    ;;
+  "")
+    echo " > No package was passed. Exiting script."
+    exit 0
+    ;;
+  *)
+  ;;
+esac
+
+if [[ $(echo "$PKG" | grep -c "${SCOPE}") -eq 0 ]]; then
+  echo " > Namespace scope was not detected."
+  echo " > Automatically appending '${SCOPE}' namespace to package name."
+  PKG="${SCOPE}/$PKG"
+fi
+
+# echo "npm install ""$@"" --workspace=${PKG}"
+
+# Run install command
+npm install "$@" -w "$PKG"
+exit 0
+
+
+
+
+
+
