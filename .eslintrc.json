@@ -1,0 +1,38 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "extends": ["./config/base.eslintrc.json", "prettier"],
+  "env": {
+    "node": true,
+    "browser": true,
+    "es6": true
+  },
+  "plugins": ["@typescript-eslint"],
+  "settings": {
+    "next": {
+      "rootDir": "packages/web/"
+    }
+  },
+  "rules": {},
+  "overrides": [
+  //  {
+  //     "files": ["packages/web/**.ts", "packages/web/**.tsx"],
+  //     "parserOptions": {
+  //       "project": ["./tsconfig.json"]
+  //     }
+  //   },
+    {
+      "files": ["packages/xm/**.ts", "packages/xm/**.*.ts"],
+      "parserOptions": {
+        "project": ["./packages/xm/tsconfig.json"]
+      }
+    }
+  ]
+}

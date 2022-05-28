@@ -1,0 +1,33 @@
+{
+  "name": "@monorepo-template/test",
+  "version": "0.0.1",
+  "description": "Example package within a monorepo.",
+  "author": "oranjtesla",
+  "license": "MIT",
+  "main": "dist/app.js",
+  "types": "./lib",
+  "_moduleAliases": {
+    "@root": "./"
+  },
+  "scripts": {
+    "clean": "rm -r dist/",
+    "denode": "rm -r node_modules/; rm package-lock.json",
+    "denode:lock": "rm package-lock.json",
+    "build": "tsc --build",
+    "predev": "npm run genv",
+    "tsdev": "ts-node-dev --respawn --transpile-only --rs src/app.ts",
+    "dev": "concurrently --raw --handle-input \"npm run tsdev\" \"npm run genw\"",
+    "dev2": "concurrently --names \"DEV,GQL\" -c \"cyan.bold,gray\" --handle-input  \"npm run tsdev\" \"npm run genw\"",
+    "ping": "echo 'pong: @monorepo-template/test'",
+    "up": "mikro-orm migration:up",
+    "genv": "gen-env-types .env -o src/env.d.ts -e .",
+    "genw": "graphql-codegen --config codegen.config.yml --watch",
+    "gen": "graphql-codegen --config codegen.config.yml"
+  },
+  "devDependencies": {
+    "dotenv-safe": "^8.2.0",
+    "module-alias": "^2.2.2"
+  },
+  "dependencies": {
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "proseWrap": "preserve",
+  "endOfLine": "lf",
+  "embeddedLanguageFormatting": "auto",
+  "printWidth": 100,
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "jsxSingleQuote": true,
+  "singleQuote": false,
+  "quoteProps": "as-needed",
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "bracketSameLine": false,
+  "singleAttributePerLine": false,
+  "arrowParens": "avoid",
+  "overrides": [
+      {
+          "files": ["**.json", "**.prettierrc"],
+          "options": {
+              "parser": "json",
+              "tabWidth": 2,
+              "trailingComma": "none",
+              "printWidth": 120
+          }
+      }
+  ]
+}

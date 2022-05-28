@@ -1,0 +1,38 @@
+# .gitignore for node projects #
+
+# Universal
+node_modules/
+*/temp/
+dist/
+lib/
+
+# Any directory appended with _old will be ignored.
+**/*_old/**
+
+# private directory names
+ztemp/
+.exim/
+trash/
+dev/
+
+# Generated, compiled, or system directories
+#.vscode/
+.next/
+declarations/
+**/migrations/**
+**/generated/**
+
+# configuration files
+.gitattributes
+.env
+.vscodeignore
+.dockerignore
+*.code-workspace
+
+# .yaml used solely for the graphql extension in VS Code.
+graphql.config.yaml
+
+# Generated files
+*.tsbuildinfo
+package-lock.json
+**env.d.ts

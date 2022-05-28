@@ -1,0 +1,14 @@
+{
+  "extends": "../../config/tsc.package",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "declarationDir": "./lib",
+    "baseUrl": ".",
+    "paths": {
+    }
+  },
+  "files": ["./src/app.ts"],
+  "include": ["./**/*.tsx", "./**/*.ts", "./env.d.ts", "./**/**.*.ts"],
+  "exclude": ["node_modules"]
+}
